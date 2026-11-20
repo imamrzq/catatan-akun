@@ -81,6 +81,8 @@ header .wrap>div{display:flex;align-items:center}
 .dots.bad{animation:sh .32s}.dots.bad i{border-color:var(--bad);background:var(--bad)}
 @keyframes sh{20%{transform:translateX(-9px)}60%{transform:translateX(9px)}}
 @media(prefers-reduced-motion:reduce){.dots.bad{animation:none}}
+.dots.show i{width:46px;height:56px;border-radius:12px;display:grid;place-items:center;font-style:normal;font-size:1.7rem;font-weight:600}
+.dots.show i.on{background:none}.dots.show.bad i{background:none;color:var(--bad)}
 .keys{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;justify-items:center;max-width:300px;margin:0 auto}
 .keys button{width:76px;height:76px;border-radius:50%;font-size:1.9rem;font-weight:500;background:var(--sf);border:1px solid var(--line);display:grid;place-items:center}
 .keys button:active{background:var(--line)}
@@ -147,17 +149,17 @@ function lock(){key=null;items=[];closeSheet();showLock()}
 document.addEventListener('visibilitychange',()=>{if(document.hidden)hid=Date.now();else if(key&&Date.now()-hid>60000)lock()});
 
 /* pin */
-const padHTML=()=>`<div class="dots"><i></i><i></i><i></i><i></i></div><div class="keys">${[1,2,3,4,5,6,7,8,9].map(n=>`<button data-a="key" data-k="${n}">${n}</button>`).join('')}<span></span><button data-a="key" data-k="0">0</button><button data-a="bk" aria-label="Hapus">${svg('back',24)}</button></div>`;
-const drawDots=()=>document.querySelectorAll('.dots i').forEach((d,i)=>d.classList.toggle('on',i<pin.length));
+const padHTML=(sh)=>`<div class="dots${sh?' show':''}"><i></i><i></i><i></i><i></i></div><div class="keys">${[1,2,3,4,5,6,7,8,9].map(n=>`<button data-a="key" data-k="${n}">${n}</button>`).join('')}<span></span><button data-a="key" data-k="0">0</button><button data-a="bk" aria-label="Hapus">${svg('back',24)}</button></div>`;
+const drawDots=()=>document.querySelectorAll('.dots i').forEach((d,i)=>{d.classList.toggle('on',i<pin.length);d.textContent=d.parentElement.classList.contains('show')&&i<pin.length?pin[i]:''});
 function bad(m){const ct=$('#ct');if(ct&&!$('#sheetBg').hidden)ct.textContent=m;else err(m);const d=document.querySelectorAll('.dots');d.forEach(x=>x.classList.add('bad'));setTimeout(()=>{d.forEach(x=>x.classList.remove('bad'));pin='';drawDots();wait=0},450)}
 async function press(d){if(wait||pin.length>=4)return;if(navigator.vibrate)navigator.vibrate(8);err('');pin+=d;drawDots();if(pin.length<4)return;wait=1;
-  const r=await onPin(pin);if(r===true||r===undefined)setTimeout(()=>{pin='';drawDots();wait=0},120);else bad(r)}
+  const r=await onPin(pin);if(r===true||r===undefined)setTimeout(()=>{pin='';drawDots();wait=0},$('.dots.show')?450:120);else bad(r)}
 const back=()=>{if(wait)return;pin=pin.slice(0,-1);drawDots()};
 async function lockPin(p){
   if(!has()){if(step==0){first=p;step=1;$('#lockTitle').textContent='Ulangi PIN';return true}if(p!==first){step=0;first='';$('#lockTitle').textContent='Buat PIN';return 'PIN tidak sama. Coba lagi.'}}
   return (await unlock(p))||'PIN salah.'}
 const nextStep=(s2,t)=>{cs=s2;$('#ct').textContent=t;return true};
-function chgView(t){openSheet(head('Ubah PIN')+`<p class="ct" id="ct">${t}</p>`+padHTML());pin='';wait=0;onPin=chgPin;drawDots()}
+function chgView(t){openSheet(head('Ubah PIN')+`<p class="ct" id="ct">${t}</p>`+padHTML(1));pin='';wait=0;onPin=chgPin;drawDots()}
 async function chgPin(p){
   if(cs=='old'){try{await decrypt(await derive(p,salt),JSON.parse(localStorage.getItem(LS)))}catch{return 'PIN lama salah.'}cold=p;return nextStep('new','Masukkan PIN baru')}
   if(cs=='new'){if(p===cold)return 'PIN baru harus berbeda.';cnew=p;return nextStep('conf','Ulangi PIN baru')}
