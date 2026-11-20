@@ -75,6 +75,19 @@ header .wrap>div{display:flex;align-items:center}
 .card.t{border-color:transparent;color:#1d2024}.card.t small{color:#4b5563}.card.t .av{background:rgba(255,255,255,.65);color:#1d2024}
 .acts.bar{position:sticky;bottom:0;z-index:2;margin:14px -16px 0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:var(--bg);border-top:1px solid var(--line)}
 #sheet[data-edit]{padding-bottom:0}
+.dots{display:flex;gap:18px;justify-content:center;margin:14px 0 26px}
+.dots i{width:16px;height:16px;border-radius:50%;border:2px solid var(--mute)}
+.dots i.on{background:var(--ink);border-color:var(--ink)}
+.dots.bad{animation:sh .32s}.dots.bad i{border-color:var(--bad);background:var(--bad)}
+@keyframes sh{20%{transform:translateX(-9px)}60%{transform:translateX(9px)}}
+@media(prefers-reduced-motion:reduce){.dots.bad{animation:none}}
+.keys{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;justify-items:center;max-width:300px;margin:0 auto}
+.keys button{width:76px;height:76px;border-radius:50%;font-size:1.9rem;font-weight:500;background:var(--sf);border:1px solid var(--line);display:grid;place-items:center}
+.keys button:active{background:var(--line)}
+.keys button[data-a=bk]{background:none;border-color:transparent;color:var(--mute)}
+#lock h1,#lock p,#lock .err{text-align:center}
+#txt{display:flex;flex-direction:column;gap:12px}
+.ct{text-align:center;margin:8px 0 0;font-size:1.05rem}
 .hint{font-size:0.8125rem;color:var(--mute);margin:8px 2px 0}
 #list.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;align-content:start}
 #list.grid .card{position:relative;min-width:0;flex-direction:column;align-items:flex-start;margin:0;gap:10px}
@@ -86,11 +99,10 @@ header .wrap>div{display:flex;align-items:center}
 <body>
 <main id="lock" hidden>
   <h1 id="lockTitle"></h1>
-  <p id="lockNote">Password ini mengenkripsi semua catatan. Tidak ada fitur reset, jadi simpan baik-baik.</p>
-  <input id="pw" type="password" placeholder="Password utama" autocomplete="off">
-  <input id="pw2" type="password" placeholder="Ulangi password utama" autocomplete="off">
+  <p id="lockNote"></p>
+  <div id="txt" hidden><input id="pw" type="password" placeholder="Password" autocomplete="off"><button class="btn" data-a="unlock">Lanjut</button></div>
+  <div id="pad" hidden></div>
   <div class="err" id="err"></div>
-  <button class="btn" data-a="unlock">Lanjut</button>
 </main>
 <div id="app" hidden>
   <header><div class="wrap"><h1>Catatan akun</h1><div><button class="ib" id="lay" data-a="layout" aria-label="Ubah tampilan"></button><button class="ib" data-a="menu" data-i="dots" aria-label="Menu"></button><button class="ib" data-a="lock" data-i="lock" aria-label="Kunci"></button></div></div></header>
@@ -107,11 +119,11 @@ header .wrap>div{display:flex;align-items:center}
 <script>
 const $=s=>document.querySelector(s),enc=new TextEncoder(),dec=new TextDecoder();
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const LS='catatan_akun_vault',LB='catatan_akun_backup';
+const LS='catatan_akun_vault',LB='catatan_akun_backup',LP='catatan_akun_pin';
 const ST={Active:'Aktif','Needs Update':'Perlu update',Updated:'Sudah diperbarui'};
-const IC={lock:'<path d="M7 11V8a5 5 0 0110 0v3M6 11h12v9H6z"/>',dots:'<circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/>',copy:'<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 012-2h9"/>',eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',x:'<path d="M6 6l12 12M18 6L6 18"/>',grid:'<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',list:'<path d="M5 7h14M5 12h14M5 17h14"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'};
+const IC={lock:'<path d="M7 11V8a5 5 0 0110 0v3M6 11h12v9H6z"/>',dots:'<circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/>',copy:'<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 012-2h9"/>',eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',x:'<path d="M6 6l12 12M18 6L6 18"/>',grid:'<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',list:'<path d="M5 7h14M5 12h14M5 17h14"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',back:'<path d="M21 5H9l-6 7 6 7h12z"/><path d="M13 9l4 6M17 9l-4 6"/>'};
 const svg=(n,s=20)=>`<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${IC[n]}</svg>`;
-let key=null,salt=null,items=[],f='all',hid=0,tmr;
+let key=null,salt=null,items=[],f='all',hid=0,tmr,pin='',first='',step=0,wait=0,onPin=null,cs='',cold='',cnew='';
 
 /* crypto */
 const b64=u=>{let s='';u=new Uint8Array(u);for(let i=0;i<u.length;i++)s+=String.fromCharCode(u[i]);return btoa(s)};
@@ -122,14 +134,36 @@ async function save(){const iv=crypto.getRandomValues(new Uint8Array(12));const 
 
 /* lock */
 const has=()=>!!localStorage.getItem(LS);
-function showLock(){$('#app').hidden=true;$('#lock').hidden=false;const s=!has();$('#lockTitle').textContent=s?'Buat password utama':'Buka catatan';$('#pw2').hidden=$('#lockNote').hidden=!s;$('#pw').value=$('#pw2').value=$('#err').textContent='';}
+function showLock(){$('#app').hidden=true;$('#lock').hidden=false;$('#err').textContent='';pin='';first='';step=0;wait=0;onPin=lockPin;
+  const nv=!has(),lg=has()&&!localStorage.getItem(LP);$('#txt').hidden=!lg;$('#pad').hidden=lg;$('#pw').value='';
+  $('#lockTitle').textContent=nv?'Buat PIN':lg?'Buka catatan':'Masukkan PIN';
+  $('#lockNote').textContent=nv?'PIN 4 angka ini mengenkripsi semua catatan. Tidak ada fitur reset, jadi ingat baik-baik.':lg?'Setelah masuk, ganti ke PIN 4 angka lewat Pengaturan.':'';drawDots()}
 const err=m=>$('#err').textContent=m;
-async function unlock(){const pw=$('#pw').value;err('');
-  if(!has()){if(pw.length<4)return err('Minimal 4 karakter.');if(pw!==$('#pw2').value)return err('Konfirmasi tidak sama.');salt=crypto.getRandomValues(new Uint8Array(16));key=await derive(pw,salt);items=[];await save()}
-  else{try{const b=JSON.parse(localStorage.getItem(LS));salt=ub(b.salt);key=await derive(pw,salt);items=await decrypt(key,b)}catch{key=null;return err('Password salah.')}}
-  $('#lock').hidden=true;$('#app').hidden=false;$('#pw').value=$('#pw2').value='';f='all';render()}
+async function unlock(pw){err('');
+  if(!has()){salt=crypto.getRandomValues(new Uint8Array(16));key=await derive(pw,salt);items=[];await save();localStorage.setItem(LP,'1')}
+  else{try{const b=JSON.parse(localStorage.getItem(LS));salt=ub(b.salt);key=await derive(pw,salt);items=await decrypt(key,b)}catch{key=null;return false}}
+  $('#lock').hidden=true;$('#app').hidden=false;$('#pw').value='';f='all';render();return true}
 function lock(){key=null;items=[];closeSheet();showLock()}
 document.addEventListener('visibilitychange',()=>{if(document.hidden)hid=Date.now();else if(key&&Date.now()-hid>60000)lock()});
+
+/* pin */
+const padHTML=()=>`<div class="dots"><i></i><i></i><i></i><i></i></div><div class="keys">${[1,2,3,4,5,6,7,8,9].map(n=>`<button data-a="key" data-k="${n}">${n}</button>`).join('')}<span></span><button data-a="key" data-k="0">0</button><button data-a="bk" aria-label="Hapus">${svg('back',24)}</button></div>`;
+const drawDots=()=>document.querySelectorAll('.dots i').forEach((d,i)=>d.classList.toggle('on',i<pin.length));
+function bad(m){const ct=$('#ct');if(ct&&!$('#sheetBg').hidden)ct.textContent=m;else err(m);const d=document.querySelectorAll('.dots');d.forEach(x=>x.classList.add('bad'));setTimeout(()=>{d.forEach(x=>x.classList.remove('bad'));pin='';drawDots();wait=0},450)}
+async function press(d){if(wait||pin.length>=4)return;if(navigator.vibrate)navigator.vibrate(8);err('');pin+=d;drawDots();if(pin.length<4)return;wait=1;
+  const r=await onPin(pin);if(r===true||r===undefined)setTimeout(()=>{pin='';drawDots();wait=0},120);else bad(r)}
+const back=()=>{if(wait)return;pin=pin.slice(0,-1);drawDots()};
+async function lockPin(p){
+  if(!has()){if(step==0){first=p;step=1;$('#lockTitle').textContent='Ulangi PIN';return true}if(p!==first){step=0;first='';$('#lockTitle').textContent='Buat PIN';return 'PIN tidak sama. Coba lagi.'}}
+  return (await unlock(p))||'PIN salah.'}
+const nextStep=(s2,t)=>{cs=s2;$('#ct').textContent=t;return true};
+function chgView(t){openSheet(head('Ubah PIN')+`<p class="ct" id="ct">${t}</p>`+padHTML());pin='';wait=0;onPin=chgPin;drawDots()}
+async function chgPin(p){
+  if(cs=='old'){try{await decrypt(await derive(p,salt),JSON.parse(localStorage.getItem(LS)))}catch{return 'PIN lama salah.'}cold=p;return nextStep('new','Masukkan PIN baru')}
+  if(cs=='new'){if(p===cold)return 'PIN baru harus berbeda.';cnew=p;return nextStep('conf','Ulangi PIN baru')}
+  if(p!==cnew){cs='new';return 'PIN tidak sama. Ulangi dari PIN baru.'}
+  salt=crypto.getRandomValues(new Uint8Array(16));key=await derive(p,salt);await save();localStorage.setItem(LP,'1');closeSheet();toast('PIN diganti. Buat backup baru.')}
+function pwSheet(){cs='';cold='';cnew='';if(localStorage.getItem(LP)){cs='old';chgView('Masukkan PIN lama')}else openSheet(head('Ubah ke PIN')+`<div class="f"><label for="o_pw">Password lama</label><input id="o_pw" type="password" autocomplete="off"></div><div class="acts"><button class="btn" data-a="pwold">Lanjut</button></div>`)}
 
 /* prefs */
 const COL={rose:'#fbd4dc',peach:'#fde3cc',yellow:'#fff3bf',mint:'#d3f0dc',sky:'#d3e9fb',lavender:'#e3d9f7'};
@@ -143,8 +177,7 @@ async function setupRem(){try{const g=await navigator.serviceWorker.ready;if(!g.
 function setSheet(){const c={...P,remon:P.rem.on},R=P.rem,days=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
   const seg=(k,o)=>`<div class="seg">${o.map(([v,t])=>`<button class="${c[k]==v?'on':''}" data-a="pref" data-k="${k}" data-v="${v}">${t}</button>`).join('')}</div>`;
   openSheet(head('Pengaturan')+`<div class="f"><label>Tema</label>${seg('theme',[['auto','Otomatis'],['light','Terang'],['dark','Gelap']])}</div><div class="f"><label>Ukuran huruf</label>${seg('fs',[[14,'Kecil'],[16,'Sedang'],[19,'Besar']])}</div><div class="f"><label>Tampilan daftar</label>${seg('layout',[['list','Daftar'],['grid','Kolom']])}</div><div class="f"><label>Pengingat backup mingguan</label>${seg('remon',[[0,'Mati'],[1,'Aktif']])}</div>`+
-  (R.on?`<div class="g2 f"><select id="p_day" aria-label="Hari">${days.map((d,i)=>`<option value="${i}"${R.day==i?' selected':''}>${d}</option>`).join('')}</select><input id="p_time" type="time" value="${R.time}" aria-label="Jam"></div><div class="acts"><button class="btn alt" data-a="ics">Tambahkan ke Kalender</button><button class="btn alt" data-a="remtest">Tes notifikasi</button></div><p class="hint">Notifikasi dari aplikasi saat tertutup tidak selalu tepat waktu di Android. Pengingat lewat Kalender paling andal dan berbunyi persis di jam yang kamu pilih.</p>`:'')+`<button class="mi" data-a="pwchg" style="margin-top:14px"><b>Ubah password utama</b><small>Ganti password yang membuka catatan.</small></button>`)}
-function pwSheet(){openSheet(head('Ubah password utama')+`<div class="f"><label for="o_pw">Password lama</label><input id="o_pw" type="password" autocomplete="off"></div><div class="f"><label for="n_pw">Password baru (minimal 4 karakter)</label><input id="n_pw" type="password" autocomplete="off"></div><div class="f"><label for="n_pw2">Ulangi password baru</label><input id="n_pw2" type="password" autocomplete="off"></div><p class="hint">Backup lama tetap memakai password lama. Setelah mengganti, buat Backup terenkripsi yang baru.</p><div class="acts"><button class="btn" data-a="dopw">Ganti password</button></div>`)}
+  (R.on?`<div class="g2 f"><select id="p_day" aria-label="Hari">${days.map((d,i)=>`<option value="${i}"${R.day==i?' selected':''}>${d}</option>`).join('')}</select><input id="p_time" type="time" value="${R.time}" aria-label="Jam"></div><div class="acts"><button class="btn alt" data-a="ics">Tambahkan ke Kalender</button><button class="btn alt" data-a="remtest">Tes notifikasi</button></div><p class="hint">Notifikasi dari aplikasi saat tertutup tidak selalu tepat waktu di Android. Pengingat lewat Kalender paling andal dan berbunyi persis di jam yang kamu pilih.</p>`:'')+`<button class="mi" data-a="pwchg" style="margin-top:14px"><b>Ubah PIN</b><small>Ganti PIN 4 angka yang membuka catatan.</small></button>`)}
 function ics(){const R=P.rem,[h,m]=R.time.split(':').map(Number),n=new Date(),d=new Date(n);d.setHours(h,m,0,0);d.setDate(d.getDate()+((R.day-n.getDay()+7)%7));if(d<=n)d.setDate(d.getDate()+7);
   const z=x=>String(x).padStart(2,'0'),loc=x=>x.getFullYear()+z(x.getMonth()+1)+z(x.getDate())+'T'+z(x.getHours())+z(x.getMinutes())+'00',utc=n.toISOString().replace(/[-:]/g,'').replace(/\.\d+/,'');
   const t=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Catatan Akun//ID','BEGIN:VEVENT','UID:backup@catatan-akun','DTSTAMP:'+utc,'DTSTART:'+loc(d),'DURATION:PT15M','RRULE:FREQ=WEEKLY;BYDAY='+['SU','MO','TU','WE','TH','FR','SA'][R.day],'SUMMARY:Backup Catatan Akun','DESCRIPTION:Buka aplikasi Catatan Akun, menu titik tiga, lalu Backup terenkripsi.','BEGIN:VALARM','TRIGGER:PT0S','ACTION:DISPLAY','DESCRIPTION:Backup Catatan Akun','END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n');
@@ -167,7 +200,7 @@ function render(){
 
 /* sheet */
 const openSheet=h=>{$('#sheet').innerHTML=h;$('#sheetBg').hidden=false};
-const closeSheet=()=>{$('#sheetBg').hidden=true;$('#sheet').innerHTML=''};
+const closeSheet=()=>{$('#sheetBg').hidden=true;$('#sheet').innerHTML='';onPin=lockPin;pin='';wait=0};
 const head=(t)=>`<div class="sh"><h2>${esc(t)}</h2><button class="ib" data-a="close" aria-label="Tutup">${svg('x')}</button></div>`;
 const row=(l,v,o={})=>v?`<div class="row"><div><span class="lb">${l}</span><div class="val"${o.s?` data-s="${esc(v)}"`:''}>${o.s?'••••••••••':esc(v)}</div></div>${o.s?`<button class="ib" data-a="reveal" aria-label="Lihat">${svg('eye')}</button>`:''}${o.c?`<button class="ib" data-a="copy" data-v="${esc(v)}" aria-label="Salin">${svg('copy')}</button>`:''}</div>`:'';
 function view(id){const i=items.find(x=>x.id===id);if(!i)return;
@@ -197,7 +230,7 @@ function fromCSV(t){const r=parseCSV(t),h=r[0].map(x=>x.trim().toLowerCase()),ix
   const m={name:ix('account name','name','nama','nama akun'),user:ix('username/email','username','email','user'),pass:ix('password'),status:ix('password status','status'),url:ix('url','situs','website'),cat:ix('category','kategori'),notes:ix('notes','catatan')};
   return r.slice(1).filter(x=>x.some(c=>c.trim())).map(x=>{const g=k=>m[k]>=0?(x[m[k]]||'').trim():'';const s=g('status');return{name:g('name'),user:g('user'),pass:g('pass'),url:g('url'),cat:g('cat'),notes:g('notes'),status:/need|perlu/i.test(s)?'Needs Update':/updated|sudah/i.test(s)?'Updated':'Active'}})}
 async function doImport(file){const t=(await file.text()).replace(/^\uFEFF/,'');let add;
-  try{if(t.trim()[0]=='{'){const b=JSON.parse(t),pw=prompt('Masukkan password utama dari backup ini:');if(!pw)return;add=await decrypt(await derive(pw,ub(b.salt)),b)}else add=fromCSV(t)}
+  try{if(t.trim()[0]=='{'){const b=JSON.parse(t),pw=prompt('Masukkan PIN atau password dari backup ini:');if(!pw)return;add=await decrypt(await derive(pw,ub(b.salt)),b)}else add=fromCSV(t)}
   catch{return toast('Gagal impor. Password salah atau file tidak dikenali.')}
   const ids=new Set(items.map(i=>i.id));let n=0;
   for(const i of add){if(!i.name||(i.id&&ids.has(i.id)))continue;items.push({status:'Active',...i,id:i.id||uid(),ts:Date.now()});n++}
@@ -206,7 +239,7 @@ async function doImport(file){const t=(await file.text()).replace(/^\uFEFF/,'');
 document.addEventListener('click',async e=>{
   if(e.target===$('#sheetBg')&&!$('#sheet').dataset.edit)return closeSheet();
   const b=e.target.closest('[data-a]');if(!b)return;const a=b.dataset.a,id=b.dataset.id;
-  if(a=='unlock')unlock();
+  if(a=='unlock'){const v=$('#pw').value;if(v&&!(await unlock(v)))err('Password salah.')}
   else if(a=='lock')lock();
   else if(a=='chip'){f=b.dataset.f;render()}
   else if(a=='open'){delete $('#sheet').dataset.edit;view(id)}
@@ -229,10 +262,10 @@ document.addEventListener('click',async e=>{
   else if(a=='expc'){if(!confirm('File CSV tidak terenkripsi, siapa pun yang memegangnya bisa membaca password. Lanjut?'))return;
     const H=['Account Name','Username/Email','Password','Password Status','URL','Category','Notes'];
     dl('catatan-akun-'+day()+'.csv',[H.map(csvq).join(','),...items.filter(i=>!i.del&&!i.gone).map(i=>[i.name,i.user,i.pass,i.status,i.url,i.cat,i.notes].map(csvq).join(','))].join('\n'),'text/csv');closeSheet();toast('CSV disimpan.')}
+  else if(a=='key')press(b.dataset.k);
+  else if(a=='bk')back();
+  else if(a=='pwold'){const o=$('#o_pw').value;if(!o)return;try{await decrypt(await derive(o,salt),JSON.parse(localStorage.getItem(LS)))}catch{return toast('Password lama salah.')}cold=o;cs='new';chgView('Masukkan PIN baru')}
   else if(a=='pwchg')pwSheet();
-  else if(a=='dopw'){const o=$('#o_pw').value,n=$('#n_pw').value;if(n.length<4)return toast('Password baru minimal 4 karakter.');if(n!==$('#n_pw2').value)return toast('Konfirmasi tidak sama.');if(n===o)return toast('Password baru harus berbeda.');
-    try{await decrypt(await derive(o,salt),JSON.parse(localStorage.getItem(LS)))}catch{return toast('Password lama salah.')}
-    salt=crypto.getRandomValues(new Uint8Array(16));key=await derive(n,salt);await save();closeSheet();toast('Password diganti. Buat backup baru.')}
   else if(a=='color'){const w=b.parentElement;w.dataset.v=b.dataset.v;w.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b))}
   else if(a=='settings'){delete $('#sheet').dataset.edit;setSheet()}
   else if(a=='pref'){const k=b.dataset.k,v=b.dataset.v;if(k=='remon'){P.rem.on=+v;if(+v&&window.Notification){if(Notification.permission=='default')await Notification.requestPermission();if(Notification.permission=='denied')toast('Izin notifikasi ditolak. Pakai Kalender sebagai pengingat.')}}else P[k]=k=='fs'?+v:v;savePrefs();setupRem();setSheet();render()}
@@ -244,9 +277,9 @@ document.addEventListener('click',async e=>{
 document.addEventListener('change',e=>{if(e.target.id=='p_day'||e.target.id=='p_time'){P.rem.day=+$('#p_day').value;P.rem.time=$('#p_time').value||'09:00';savePrefs();setupRem()}});
 $('#file').addEventListener('change',e=>{const x=e.target.files[0];e.target.value='';if(x)doImport(x)});
 $('#q').addEventListener('input',render);
-document.addEventListener('keydown',e=>{if(e.key=='Enter'&&!$('#lock').hidden)unlock()});
+document.addEventListener('keydown',async e=>{if(e.key=='Enter'&&!$('#txt').hidden){const v=$('#pw').value;if(v&&!(await unlock(v)))err('Password salah.')}else if(/^\d$/.test(e.key)&&!$('#pad').hidden&&!$('#lock').hidden)press(e.key)});
 document.querySelectorAll('[data-i]').forEach(b=>b.innerHTML=svg(b.dataset.i));
-applyPrefs();syncPrefs();showLock();
+$('#pad').innerHTML=padHTML();applyPrefs();syncPrefs();showLock();
 if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>
