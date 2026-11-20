@@ -9,31 +9,32 @@
 <title>Catatan Akun</title>
 <style>
 :root{--bg:#f6f7f8;--sf:#fff;--ink:#16191d;--mute:#6b7280;--line:#e5e7eb;--acc:#0e7c72;--on:#fff;--warn:#b45309;--bad:#c2362b;color-scheme:light}
-@media(prefers-color-scheme:dark){:root{--bg:#101214;--sf:#181b1f;--ink:#ecedee;--mute:#9aa1a9;--line:#262a2f;--acc:#3dc2b3;--on:#06201d;--warn:#f0b35a;--bad:#ff7b6e;color-scheme:dark}}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#101214;--sf:#181b1f;--ink:#ecedee;--mute:#9aa1a9;--line:#262a2f;--acc:#3dc2b3;--on:#06201d;--warn:#f0b35a;--bad:#ff7b6e;color-scheme:dark}}
+:root[data-theme=dark]{--bg:#101214;--sf:#181b1f;--ink:#ecedee;--mute:#9aa1a9;--line:#262a2f;--acc:#3dc2b3;--on:#06201d;--warn:#f0b35a;--bad:#ff7b6e;color-scheme:dark}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:1em/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 [hidden]{display:none!important}
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer;border:0;background:none}
 .wrap{max-width:560px;margin:0 auto;padding:0 16px}
 #lock{min-height:100vh;display:flex;flex-direction:column;justify-content:center;max-width:380px;margin:0 auto;padding:24px;gap:12px}
-#lock h1{font-size:26px;margin:0 0 4px;letter-spacing:-.02em}
-#lock p{margin:0 0 8px;color:var(--mute);font-size:14px}
+#lock h1{font-size:1.625rem;margin:0 0 4px;letter-spacing:-.02em}
+#lock p{margin:0 0 8px;color:var(--mute);font-size:0.875rem}
 input,select,textarea{width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:12px;background:var(--sf);outline:none}
 input:focus,select:focus,textarea:focus{border-color:var(--acc);box-shadow:0 0 0 3px color-mix(in srgb,var(--acc) 22%,transparent)}
 textarea{min-height:88px;resize:vertical}
 .btn{width:100%;padding:13px;border-radius:12px;background:var(--acc);color:var(--on);font-weight:600}
 .btn.alt{background:var(--sf);color:var(--ink);border:1px solid var(--line)}
 .btn.bad{background:none;color:var(--bad);border:1px solid var(--line)}
-.err{color:var(--bad);font-size:14px;min-height:20px}
+.err{color:var(--bad);font-size:0.875rem;min-height:20px}
 header{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);padding-top:env(safe-area-inset-top)}
 header .wrap{display:flex;align-items:center;justify-content:space-between;height:56px}
-header h1{font-size:20px;margin:0;letter-spacing:-.02em}
+header h1{font-size:1.25rem;margin:0;letter-spacing:-.02em}
 .ib{width:40px;height:40px;border-radius:12px;display:inline-grid;place-items:center;color:var(--mute)}
 .ib:active{background:var(--line)}
 #chips{display:flex;gap:8px;overflow-x:auto;padding:12px 0;scrollbar-width:none}
 #chips::-webkit-scrollbar{display:none}
-.chip{flex:none;padding:7px 14px;border-radius:99px;border:1px solid var(--line);background:var(--sf);font-size:14px;color:var(--mute)}
+.chip{flex:none;padding:7px 14px;border-radius:99px;border:1px solid var(--line);background:var(--sf);font-size:0.875rem;color:var(--mute)}
 .chip.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
 #list{padding-bottom:110px}
 .card{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:12px;margin-bottom:8px;background:var(--sf);border:1px solid var(--line);border-radius:14px}
@@ -42,27 +43,38 @@ header h1{font-size:20px;margin:0;letter-spacing:-.02em}
 .card small{display:block;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .card .tx{min-width:0;flex:1}
 .dot{flex:none;width:9px;height:9px;border-radius:50%;background:var(--warn)}
-.note{padding:12px 14px;margin-bottom:10px;border-radius:12px;background:color-mix(in srgb,var(--warn) 14%,transparent);color:var(--warn);font-size:14px;width:100%;text-align:left}
+.note{padding:12px 14px;margin-bottom:10px;border-radius:12px;background:color-mix(in srgb,var(--warn) 14%,transparent);color:var(--warn);font-size:0.875rem;width:100%;text-align:left}
 .empty{text-align:center;color:var(--mute);padding:48px 0}
-#fab{position:fixed;right:max(20px,calc(50% - 260px));bottom:calc(20px + env(safe-area-inset-bottom));width:56px;height:56px;border-radius:18px;background:var(--acc);color:var(--on);font-size:30px;line-height:1;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+#fab{position:fixed;right:max(20px,calc(50% - 260px));bottom:calc(20px + env(safe-area-inset-bottom));width:56px;height:56px;border-radius:18px;background:var(--acc);color:var(--on);font-size:1.875rem;line-height:1;box-shadow:0 6px 20px rgba(0,0,0,.25)}
 #sheetBg{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center}
 #sheet{width:100%;max-width:560px;max-height:92vh;overflow-y:auto;background:var(--bg);border-radius:22px 22px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));animation:up .18s ease-out}
 @keyframes up{from{transform:translateY(24px);opacity:.6}}
 @media(prefers-reduced-motion:reduce){#sheet{animation:none}}
 .sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.sh h2{margin:0;font-size:20px;letter-spacing:-.02em;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.sh h2{margin:0;font-size:1.25rem;letter-spacing:-.02em;min-width:0;overflow:hidden;text-overflow:ellipsis}
 .row{display:flex;align-items:center;gap:4px;padding:10px 14px;margin-bottom:8px;background:var(--sf);border:1px solid var(--line);border-radius:12px}
 .row>div{flex:1;min-width:0}
-.lb{display:block;font-size:13px;color:var(--mute)}
+.lb{display:block;font-size:0.8125rem;color:var(--mute)}
 .val{word-break:break-all;white-space:pre-wrap}
-.f{margin-bottom:12px}.f label{display:block;font-size:13px;color:var(--mute);margin:0 0 5px 2px}
+.f{margin-bottom:12px}.f label{display:block;font-size:0.8125rem;color:var(--mute);margin:0 0 5px 2px}
 .f .g{display:flex;gap:8px}.f .g button{flex:none;padding:0 14px;border-radius:12px;border:1px solid var(--line);background:var(--sf)}
 .acts{display:grid;gap:8px;margin-top:14px}
 .acts.two{grid-template-columns:1fr 1fr}
 .mi{display:block;width:100%;text-align:left;padding:14px;margin-bottom:8px;background:var(--sf);border:1px solid var(--line);border-radius:12px}
 .mi small{display:block;color:var(--mute)}
-#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(90px + env(safe-area-inset-bottom));z-index:30;max-width:92%;display:flex;gap:14px;align-items:center;padding:12px 16px;border-radius:12px;background:var(--ink);color:var(--bg);font-size:14px}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(90px + env(safe-area-inset-bottom));z-index:30;max-width:92%;display:flex;gap:14px;align-items:center;padding:12px 16px;border-radius:12px;background:var(--ink);color:var(--bg);font-size:0.875rem}
 #toast button{color:var(--acc);font-weight:700}
+.card .ts{font-size:0.75rem;margin-top:1px}
+header .wrap>div{display:flex;align-items:center}
+.seg{display:flex;gap:6px}.seg button{flex:1;padding:10px 6px;border-radius:10px;border:1px solid var(--line);background:var(--sf);font-size:0.875rem}
+.seg .on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.hint{font-size:0.8125rem;color:var(--mute);margin:8px 2px 0}
+#list.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-content:start}
+#list.grid .card{position:relative;flex-direction:column;align-items:flex-start;margin:0;gap:10px}
+#list.grid .tx{flex:none;width:100%}
+#list.grid .dot{position:absolute;top:12px;right:12px}
+#list.grid .note,#list.grid .empty{grid-column:1/-1}
 </style>
 </head>
 <body>
@@ -75,7 +87,7 @@ header h1{font-size:20px;margin:0;letter-spacing:-.02em}
   <button class="btn" data-a="unlock">Lanjut</button>
 </main>
 <div id="app" hidden>
-  <header><div class="wrap"><h1>Catatan akun</h1><div><button class="ib" data-a="menu" data-i="dots" aria-label="Menu"></button><button class="ib" data-a="lock" data-i="lock" aria-label="Kunci"></button></div></div></header>
+  <header><div class="wrap"><h1>Catatan akun</h1><div><button class="ib" id="lay" data-a="layout" aria-label="Ubah tampilan"></button><button class="ib" data-a="menu" data-i="dots" aria-label="Menu"></button><button class="ib" data-a="lock" data-i="lock" aria-label="Kunci"></button></div></div></header>
   <div class="wrap">
     <input id="q" type="search" placeholder="Cari akun" autocomplete="off">
     <div id="chips"></div>
@@ -91,7 +103,7 @@ const $=s=>document.querySelector(s),enc=new TextEncoder(),dec=new TextDecoder()
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const LS='catatan_akun_vault',LB='catatan_akun_backup';
 const ST={Active:'Aktif','Needs Update':'Perlu update',Updated:'Sudah diperbarui'};
-const IC={lock:'<path d="M7 11V8a5 5 0 0110 0v3M6 11h12v9H6z"/>',dots:'<circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/>',copy:'<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 012-2h9"/>',eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',x:'<path d="M6 6l12 12M18 6L6 18"/>'};
+const IC={lock:'<path d="M7 11V8a5 5 0 0110 0v3M6 11h12v9H6z"/>',dots:'<circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/>',copy:'<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 012-2h9"/>',eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',x:'<path d="M6 6l12 12M18 6L6 18"/>',grid:'<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',list:'<path d="M5 7h14M5 12h14M5 17h14"/>'};
 const svg=n=>`<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${IC[n]}</svg>`;
 let key=null,salt=null,items=[],f='all',hid=0,tmr;
 
@@ -113,9 +125,26 @@ async function unlock(){const pw=$('#pw').value;err('');
 function lock(){key=null;items=[];closeSheet();showLock()}
 document.addEventListener('visibilitychange',()=>{if(document.hidden)hid=Date.now();else if(key&&Date.now()-hid>60000)lock()});
 
+/* prefs */
+const PK='catatan_akun_prefs',D={theme:'auto',fs:16,layout:'list',rem:{on:0,day:0,time:'09:00'}};
+let P=(()=>{try{return{...D,...JSON.parse(localStorage.getItem(PK))}}catch{return{...D}}})();
+function ago(t){const m=(Date.now()-t)/6e4;if(m<1)return'baru saja';if(m<60)return Math.floor(m)+' menit lalu';if(m<1440)return Math.floor(m/60)+' jam lalu';const d=Math.floor(m/1440);if(d==1)return'kemarin';if(d<30)return d+' hari lalu';return new Date(t).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'})}
+function syncPrefs(){if(!window.caches)return;caches.open('prefs').then(c=>c.put('prefs.json',new Response(JSON.stringify({rem:P.rem,lb:+localStorage.getItem(LB)||0})))).catch(()=>{})}
+function applyPrefs(){const h=document.documentElement;P.theme=='auto'?h.removeAttribute('data-theme'):h.setAttribute('data-theme',P.theme);h.style.fontSize=P.fs+'px';$('#list').className=P.layout=='grid'?'grid':'';$('#lay').innerHTML=svg(P.layout=='grid'?'list':'grid')}
+function savePrefs(){localStorage.setItem(PK,JSON.stringify(P));applyPrefs();syncPrefs()}
+async function setupRem(){try{const g=await navigator.serviceWorker.ready;if(!g.periodicSync)return;if(P.rem.on&&Notification.permission=='granted')await g.periodicSync.register('backup-reminder',{minInterval:12*36e5});else await g.periodicSync.unregister('backup-reminder')}catch{}}
+function setSheet(){const c={...P,remon:P.rem.on},R=P.rem,days=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+  const seg=(k,o)=>`<div class="seg">${o.map(([v,t])=>`<button class="${c[k]==v?'on':''}" data-a="pref" data-k="${k}" data-v="${v}">${t}</button>`).join('')}</div>`;
+  openSheet(head('Pengaturan')+`<div class="f"><label>Tema</label>${seg('theme',[['auto','Otomatis'],['light','Terang'],['dark','Gelap']])}</div><div class="f"><label>Ukuran huruf</label>${seg('fs',[[14,'Kecil'],[16,'Sedang'],[19,'Besar']])}</div><div class="f"><label>Tampilan daftar</label>${seg('layout',[['list','Daftar'],['grid','Kolom']])}</div><div class="f"><label>Pengingat backup mingguan</label>${seg('remon',[[0,'Mati'],[1,'Aktif']])}</div>`+
+  (R.on?`<div class="g2 f"><select id="p_day" aria-label="Hari">${days.map((d,i)=>`<option value="${i}"${R.day==i?' selected':''}>${d}</option>`).join('')}</select><input id="p_time" type="time" value="${R.time}" aria-label="Jam"></div><div class="acts"><button class="btn alt" data-a="ics">Tambahkan ke Kalender</button><button class="btn alt" data-a="remtest">Tes notifikasi</button></div><p class="hint">Notifikasi dari aplikasi saat tertutup tidak selalu tepat waktu di Android. Pengingat lewat Kalender paling andal dan berbunyi persis di jam yang kamu pilih.</p>`:''))}
+function ics(){const R=P.rem,[h,m]=R.time.split(':').map(Number),n=new Date(),d=new Date(n);d.setHours(h,m,0,0);d.setDate(d.getDate()+((R.day-n.getDay()+7)%7));if(d<=n)d.setDate(d.getDate()+7);
+  const z=x=>String(x).padStart(2,'0'),loc=x=>x.getFullYear()+z(x.getMonth()+1)+z(x.getDate())+'T'+z(x.getHours())+z(x.getMinutes())+'00',utc=n.toISOString().replace(/[-:]/g,'').replace(/\.\d+/,'');
+  const t=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Catatan Akun//ID','BEGIN:VEVENT','UID:backup@catatan-akun','DTSTAMP:'+utc,'DTSTART:'+loc(d),'DURATION:PT15M','RRULE:FREQ=WEEKLY;BYDAY='+['SU','MO','TU','WE','TH','FR','SA'][R.day],'SUMMARY:Backup Catatan Akun','DESCRIPTION:Buka aplikasi Catatan Akun, menu titik tiga, lalu Backup terenkripsi.','BEGIN:VALARM','TRIGGER:PT0S','ACTION:DISPLAY','DESCRIPTION:Backup Catatan Akun','END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/calendar'}));a.download='pengingat-backup.ics';document.body.append(a);a.click();a.remove()}
+
 /* list */
 function render(){
-  const act=items.filter(i=>!i.del),tr=items.filter(i=>i.del),q=$('#q').value.trim().toLowerCase();
+  const act=items.filter(i=>!i.del&&!i.gone),tr=items.filter(i=>i.del&&!i.gone),q=$('#q').value.trim().toLowerCase();
   const cats=[...new Set(act.map(i=>i.cat).filter(Boolean))].sort();
   const chip=(k,t)=>`<button class="chip${f===k?' on':''}" data-a="chip" data-f="${esc(k)}">${esc(t)}</button>`;
   const upd=act.filter(i=>i.status==='Needs Update').length;
@@ -125,7 +154,7 @@ function render(){
   L.sort((a,b)=>a.name.localeCompare(b.name));
   const lb=+localStorage.getItem(LB)||0;
   const warn=f!=='trash'&&act.length&&Date.now()-lb>7*864e5?`<button class="note" data-a="menu">${lb?'Backup terakhir lebih dari 7 hari lalu.':'Belum pernah backup.'} Ketuk untuk backup.</button>`:'';
-  $('#list').innerHTML=warn+(L.length?L.map(i=>`<button class="card" data-a="open" data-id="${i.id}"><span class="av">${esc((i.name||'?')[0].toUpperCase())}</span><span class="tx"><b>${esc(i.name)}</b><small>${esc(i.user||i.cat||'')}</small></span>${i.status==='Needs Update'&&!i.del?'<span class="dot" title="Perlu update"></span>':''}</button>`).join(''):`<div class="empty">${q?'Tidak ada hasil.':f==='trash'?'Sampah kosong.':'Belum ada akun. Ketuk + untuk menambah.'}</div>`);
+  $('#list').innerHTML=warn+(L.length?L.map(i=>`<button class="card" data-a="open" data-id="${i.id}"><span class="av">${esc((i.name||'?')[0].toUpperCase())}</span><span class="tx"><b>${esc(i.name)}</b><small>${esc(i.user||i.cat||'')}</small>${i.ts?`<small class="ts">Diperbarui ${ago(i.ts)}</small>`:''}</span>${i.status==='Needs Update'&&!i.del?'<span class="dot" title="Perlu update"></span>':''}</button>`).join(''):`<div class="empty">${q?'Tidak ada hasil.':f==='trash'?'Sampah kosong.':'Belum ada akun. Ketuk + untuk menambah.'}</div>`);
 }
 
 /* sheet */
@@ -134,7 +163,7 @@ const closeSheet=()=>{$('#sheetBg').hidden=true;$('#sheet').innerHTML=''};
 const head=(t)=>`<div class="sh"><h2>${esc(t)}</h2><button class="ib" data-a="close" aria-label="Tutup">${svg('x')}</button></div>`;
 const row=(l,v,o={})=>v?`<div class="row"><div><span class="lb">${l}</span><div class="val"${o.s?` data-s="${esc(v)}"`:''}>${o.s?'••••••••••':esc(v)}</div></div>${o.s?`<button class="ib" data-a="reveal" aria-label="Lihat">${svg('eye')}</button>`:''}${o.c?`<button class="ib" data-a="copy" data-v="${esc(v)}" aria-label="Salin">${svg('copy')}</button>`:''}</div>`:'';
 function view(id){const i=items.find(x=>x.id===id);if(!i)return;
-  openSheet(head(i.name)+row('Username atau email',i.user,{c:1})+row('Password',i.pass,{s:1,c:1})+row('Situs',i.url,{c:1})+row('Kategori',i.cat)+row('Status',ST[i.status])+row('Catatan',i.notes)+
+  openSheet(head(i.name)+row('Username atau email',i.user,{c:1})+row('Password',i.pass,{s:1,c:1})+row('Situs',i.url,{c:1})+row('Kategori',i.cat)+row('Status',ST[i.status])+row('Catatan',i.notes)+row('Diperbarui',i.ts?new Date(i.ts).toLocaleString('id-ID',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'')+
   (i.del?`<div class="acts"><button class="btn" data-a="restore" data-id="${id}">Pulihkan</button><button class="btn bad" data-a="purge" data-id="${id}">Hapus permanen</button></div>`:`<div class="acts two"><button class="btn alt" data-a="edit" data-id="${id}">Ubah</button><button class="btn bad" data-a="del" data-id="${id}">Hapus</button></div>`))}
 function edit(id){const i=items.find(x=>x.id===id)||{status:'Active',cat:f.startsWith('cat:')?f.slice(4):''};
   const cats=[...new Set(items.map(x=>x.cat).filter(Boolean))];
@@ -146,13 +175,13 @@ function edit(id){const i=items.find(x=>x.id===id)||{status:'Active',cat:f.start
   `<div class="f"><label for="f_notes">Catatan</label><textarea id="f_notes">${esc(i.notes||'')}</textarea></div><div class="acts two"><button class="btn alt" data-a="${id?'open':'close'}" data-id="${id||''}">Batal</button><button class="btn" data-a="save" data-id="${id||''}">Simpan</button></div>`);
   $('#sheet').dataset.edit=1}
 function menu(){const lb=+localStorage.getItem(LB)||0;
-  openSheet(head('Menu')+`<button class="mi" data-a="expj"><b>Backup terenkripsi</b><small>${lb?'Terakhir: '+new Date(lb).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'}):'Belum pernah backup'}. Butuh password utama untuk memulihkan.</small></button><button class="mi" data-a="expc"><b>Ekspor CSV</b><small>Tidak terenkripsi. Bisa dibuka di spreadsheet.</small></button><button class="mi" data-a="imp"><b>Impor dari file</b><small>Backup .json dari aplikasi ini atau CSV (termasuk ekspor Notion).</small></button>`)}
+  openSheet(head('Menu')+`<button class="mi" data-a="expj"><b>Backup terenkripsi</b><small>${lb?'Terakhir: '+new Date(lb).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'}):'Belum pernah backup'}. Butuh password utama untuk memulihkan.</small></button><button class="mi" data-a="expc"><b>Ekspor CSV</b><small>Tidak terenkripsi. Bisa dibuka di spreadsheet.</small></button><button class="mi" data-a="imp"><b>Impor dari file</b><small>Backup .json dari aplikasi ini atau CSV (termasuk ekspor Notion).</small></button><button class="mi" data-a="settings"><b>Pengaturan</b><small>Tema, ukuran huruf, tampilan, pengingat backup.</small></button>`)}
 
 /* actions */
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
 async function commit(msg,undo){await save();render();toast(msg,undo)}
 function toast(m,u){const t=$('#toast');clearTimeout(tmr);t.innerHTML=`<span>${esc(m)}</span>`+(u?`<button data-a="undo">Urungkan</button>`:'');t.hidden=false;t._u=u;tmr=setTimeout(()=>t.hidden=true,u?7000:3000)}
-function dl(name,text,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;document.body.append(a);a.click();a.remove();localStorage.setItem(LB,Date.now())}
+function dl(name,text,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;document.body.append(a);a.click();a.remove();localStorage.setItem(LB,Date.now());syncPrefs()}
 const day=()=>new Date().toISOString().slice(0,10);
 const csvq=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
 function parseCSV(t){const r=[];let w=[],c='',q=0;for(let i=0;i<t.length;i++){const h=t[i];if(q){if(h=='"'){if(t[i+1]=='"'){c+='"';i++}else q=0}else c+=h}else if(h=='"')q=1;else if(h==','){w.push(c);c=''}else if(h=='\n'||h=='\r'){if(h=='\r'&&t[i+1]=='\n')i++;w.push(c);r.push(w);w=[];c=''}else c+=h}if(c||w.length){w.push(c);r.push(w)}return r}
@@ -184,21 +213,27 @@ document.addEventListener('click',async e=>{
     const d={name,user:g('user'),pass:$('#f_pass').value,url:g('url'),cat:g('cat'),status:$('#f_status').value,notes:$('#f_notes').value.trim(),ts:Date.now()};
     if(id)Object.assign(items.find(x=>x.id===id),d);else items.push({...d,id:uid()});
     delete $('#sheet').dataset.edit;closeSheet();await commit('Tersimpan.')}
-  else if(a=='del'){items.find(x=>x.id===id).del=1;closeSheet();await commit('Dipindah ke sampah.',()=>{const i=items.find(x=>x.id===id);if(i){delete i.del;commit('Dipulihkan.')}})}
+  else if(a=='del'){{const i=items.find(x=>x.id===id);i.del=1;i.ts=Date.now()}closeSheet();await commit('Dipindah ke sampah.',()=>{const i=items.find(x=>x.id===id);if(i){delete i.del;i.ts=Date.now();commit('Dipulihkan.')}})}
   else if(a=='undo'){const u=$('#toast')._u;$('#toast').hidden=true;u&&u()}
-  else if(a=='restore'){delete items.find(x=>x.id===id).del;closeSheet();await commit('Dipulihkan.')}
-  else if(a=='purge'){if(confirm('Hapus permanen? Ini tidak bisa dibatalkan.')){items=items.filter(x=>x.id!==id);closeSheet();await commit('Dihapus permanen.')}}
+  else if(a=='restore'){{const i=items.find(x=>x.id===id);delete i.del;i.ts=Date.now()}closeSheet();await commit('Dipulihkan.')}
+  else if(a=='purge'){if(confirm('Hapus permanen? Ini tidak bisa dibatalkan.')){{const i=items.find(x=>x.id===id);for(const k of Object.keys(i))if(k!='id')delete i[k];Object.assign(i,{gone:1,del:1,ts:Date.now()})}closeSheet();await commit('Dihapus permanen.')}}
   else if(a=='expj'){dl('catatan-akun-'+day()+'.json',localStorage.getItem(LS),'application/json');closeSheet();toast('Backup terenkripsi disimpan.')}
   else if(a=='expc'){if(!confirm('File CSV tidak terenkripsi, siapa pun yang memegangnya bisa membaca password. Lanjut?'))return;
     const H=['Account Name','Username/Email','Password','Password Status','URL','Category','Notes'];
-    dl('catatan-akun-'+day()+'.csv',[H.map(csvq).join(','),...items.filter(i=>!i.del).map(i=>[i.name,i.user,i.pass,i.status,i.url,i.cat,i.notes].map(csvq).join(','))].join('\n'),'text/csv');closeSheet();toast('CSV disimpan.')}
+    dl('catatan-akun-'+day()+'.csv',[H.map(csvq).join(','),...items.filter(i=>!i.del&&!i.gone).map(i=>[i.name,i.user,i.pass,i.status,i.url,i.cat,i.notes].map(csvq).join(','))].join('\n'),'text/csv');closeSheet();toast('CSV disimpan.')}
+  else if(a=='settings'){delete $('#sheet').dataset.edit;setSheet()}
+  else if(a=='pref'){const k=b.dataset.k,v=b.dataset.v;if(k=='remon'){P.rem.on=+v;if(+v&&window.Notification){if(Notification.permission=='default')await Notification.requestPermission();if(Notification.permission=='denied')toast('Izin notifikasi ditolak. Pakai Kalender sebagai pengingat.')}}else P[k]=k=='fs'?+v:v;savePrefs();setupRem();setSheet();render()}
+  else if(a=='layout'){P.layout=P.layout=='grid'?'list':'grid';savePrefs()}
+  else if(a=='ics'){ics();toast('Buka file .ics yang terunduh untuk menambah ke Kalender.')}
+  else if(a=='remtest'){if(window.Notification&&Notification.permission=='granted')navigator.serviceWorker.ready.then(g=>g.showNotification('Catatan Akun',{body:'Pengingat backup aktif.',icon:'icon-192.png'}));else toast('Izin notifikasi belum diberikan.')}
   else if(a=='imp')$('#file').click();
 });
+document.addEventListener('change',e=>{if(e.target.id=='p_day'||e.target.id=='p_time'){P.rem.day=+$('#p_day').value;P.rem.time=$('#p_time').value||'09:00';savePrefs();setupRem()}});
 $('#file').addEventListener('change',e=>{const x=e.target.files[0];e.target.value='';if(x)doImport(x)});
 $('#q').addEventListener('input',render);
 document.addEventListener('keydown',e=>{if(e.key=='Enter'&&!$('#lock').hidden)unlock()});
 document.querySelectorAll('[data-i]').forEach(b=>b.innerHTML=svg(b.dataset.i));
-showLock();
+applyPrefs();syncPrefs();showLock();
 if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>
