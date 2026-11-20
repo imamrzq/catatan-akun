@@ -150,7 +150,7 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden)hid=Date.no
 
 /* pin */
 const padHTML=(sh)=>`<div class="dots${sh?' show':''}"><i></i><i></i><i></i><i></i></div><div class="keys">${[1,2,3,4,5,6,7,8,9].map(n=>`<button data-a="key" data-k="${n}">${n}</button>`).join('')}<span></span><button data-a="key" data-k="0">0</button><button data-a="bk" aria-label="Hapus">${svg('back',24)}</button></div>`;
-const drawDots=()=>document.querySelectorAll('.dots i').forEach((d,i)=>{d.classList.toggle('on',i<pin.length);d.textContent=d.parentElement.classList.contains('show')&&i<pin.length?pin[i]:''});
+const drawDots=()=>document.querySelectorAll('.dots').forEach(g=>g.querySelectorAll('i').forEach((d,i)=>{d.classList.toggle('on',i<pin.length);d.textContent=g.classList.contains('show')&&i<pin.length?pin[i]:''}));
 function bad(m){const ct=$('#ct');if(ct&&!$('#sheetBg').hidden)ct.textContent=m;else err(m);const d=document.querySelectorAll('.dots');d.forEach(x=>x.classList.add('bad'));setTimeout(()=>{d.forEach(x=>x.classList.remove('bad'));pin='';drawDots();wait=0},450)}
 async function press(d){if(wait||pin.length>=4)return;if(navigator.vibrate)navigator.vibrate(8);err('');pin+=d;drawDots();if(pin.length<4)return;wait=1;
   const r=await onPin(pin);if(r===true||r===undefined)setTimeout(()=>{pin='';drawDots();wait=0},$('.dots.show')?450:120);else bad(r)}
