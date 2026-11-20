@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover,interactive-widget=resizes-content">
 <meta name="theme-color" content="#0e7c72">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
@@ -73,6 +73,8 @@ header .wrap>div{display:flex;align-items:center}
 .sw{display:flex;gap:10px;flex-wrap:wrap}.sw button{width:36px;height:36px;border-radius:50%;border:2px solid transparent;box-shadow:inset 0 0 0 1px rgba(0,0,0,.14)}
 .sw .on{border-color:var(--ink)}.sw .s0{background:var(--sf)}
 .card.t{border-color:transparent;color:#1d2024}.card.t small{color:#4b5563}.card.t .av{background:rgba(255,255,255,.65);color:#1d2024}
+.acts.bar{position:sticky;bottom:0;z-index:2;margin:14px -16px 0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:var(--bg);border-top:1px solid var(--line)}
+#sheet[data-edit]{padding-bottom:0}
 .hint{font-size:0.8125rem;color:var(--mute);margin:8px 2px 0}
 #list.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;align-content:start}
 #list.grid .card{position:relative;min-width:0;flex-direction:column;align-items:flex-start;margin:0;gap:10px}
@@ -177,7 +179,7 @@ function edit(id){const i=items.find(x=>x.id===id)||{status:'Active',cat:f.start
   `<div class="f"><label for="f_pass">Password</label><div class="g"><input id="f_pass" type="text" value="${esc(i.pass||'')}" autocomplete="off"><button data-a="gen" type="button">Acak</button></div></div>`+
   fld('url','Situs',i.url)+`<div class="f"><label for="f_cat">Kategori</label><input id="f_cat" list="cl" value="${esc(i.cat||'')}" autocomplete="off"><datalist id="cl">${cats.map(c=>`<option value="${esc(c)}">`).join('')}</datalist></div>`+
   `<div class="f"><label for="f_status">Status</label><select id="f_status">${Object.entries(ST).map(([k,v])=>`<option value="${k}"${i.status===k?' selected':''}>${v}</option>`).join('')}</select></div>`+
-  `<div class="f"><label>Warna</label><div class="sw" id="f_color" data-v="${esc(i.color||'')}"><button type="button" class="s0${i.color?'':' on'}" data-a="color" data-v="" aria-label="Tanpa warna"></button>${Object.entries(COL).map(([k,v])=>`<button type="button" class="${i.color==k?'on':''}" style="background:${v}" data-a="color" data-v="${k}" aria-label="${k}"></button>`).join('')}</div></div><div class="f"><label for="f_notes">Catatan</label><textarea id="f_notes">${esc(i.notes||'')}</textarea></div><div class="acts two"><button class="btn alt" data-a="${id?'open':'close'}" data-id="${id||''}">Batal</button><button class="btn" data-a="save" data-id="${id||''}">Simpan</button></div>`);
+  `<div class="f"><label>Warna</label><div class="sw" id="f_color" data-v="${esc(i.color||'')}"><button type="button" class="s0${i.color?'':' on'}" data-a="color" data-v="" aria-label="Tanpa warna"></button>${Object.entries(COL).map(([k,v])=>`<button type="button" class="${i.color==k?'on':''}" style="background:${v}" data-a="color" data-v="${k}" aria-label="${k}"></button>`).join('')}</div></div><div class="f"><label for="f_notes">Catatan</label><textarea id="f_notes">${esc(i.notes||'')}</textarea></div><div class="acts two bar"><button class="btn alt" data-a="${id?'open':'close'}" data-id="${id||''}">Batal</button><button class="btn" data-a="save" data-id="${id||''}">Simpan</button></div>`);
   $('#sheet').dataset.edit=1}
 function menu(){const lb=+localStorage.getItem(LB)||0;
   openSheet(head('Menu')+`<button class="mi" data-a="expj"><b>Backup terenkripsi</b><small>${lb?'Terakhir: '+new Date(lb).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'}):'Belum pernah backup'}. Butuh password utama untuk memulihkan.</small></button><button class="mi" data-a="expc"><b>Ekspor CSV</b><small>Tidak terenkripsi. Bisa dibuka di spreadsheet.</small></button><button class="mi" data-a="imp"><b>Impor dari file</b><small>Backup .json dari aplikasi ini atau CSV (termasuk ekspor Notion).</small></button><button class="mi" data-a="settings"><b>Pengaturan</b><small>Tema, ukuran huruf, tampilan, pengingat backup.</small></button>`)}
